@@ -188,7 +188,7 @@ public class PerfMethodAdapter extends MethodAdapter {
 	
 	//
 	// code to handle unwinding the call stack when an exception is thrown
-	// (many thanks to Fredrik Svarén for posting this code in the help forum!)
+	// (many thanks to Fredrik Svar√©n for posting this code in the help forum!)
 	//
 	
 	@Override
