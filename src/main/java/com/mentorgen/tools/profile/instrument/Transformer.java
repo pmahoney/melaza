@@ -58,7 +58,8 @@ public class Transformer implements ClassFileTransformer {
 		// can't profile yourself
 		//
 		if (className.startsWith("com/mentorgen/tools/profile") ||
-				className.startsWith("net/sourceforge/jiprof")) {
+				className.startsWith("net/sourceforge/jiprof") ||
+				className.startsWith("org/polycrystal/looksharp/deps")) {
 			return classfileBuffer;
 		}
 		

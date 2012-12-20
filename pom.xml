@@ -98,11 +98,11 @@
               <rules>
                 <rule>
                   <pattern>org.objectweb.asm.**</pattern>
-                  <result>org.polycrystal.deps.asm.@1</result>
+                  <result>org.polycrystal.looksharp.deps.asm.@1</result>
                 </rule>
                 <rule>
                   <pattern>org.codehaus.jackson.**</pattern>
-                  <result>org.polycrystal.deps.jackson.@1</result>
+                  <result>org.polycrystal.looksharp.deps.jackson.@1</result>
                 </rule>
               </rules>
             </configuration>
