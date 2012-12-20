@@ -28,9 +28,9 @@ modification, are permitted provided that the following conditions are met:
  */
 package com.mentorgen.tools.profile.instrument;
 
-import org.objectweb.asm.jip.ClassAdapter;
-import org.objectweb.asm.jip.ClassVisitor;
-import org.objectweb.asm.jip.MethodVisitor;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 import com.mentorgen.tools.profile.Controller;
 
@@ -39,11 +39,11 @@ import com.mentorgen.tools.profile.Controller;
  * @author Andrew Wilcox
  * @see org.objectweb.asm.jip.ClassAdapter
  */
-public class PerfClassAdapter extends ClassAdapter {
+public class PerfClassAdapter extends ClassVisitor {
 	private String className;
 	
 	public PerfClassAdapter(ClassVisitor visitor, String theClass) {
-		super(visitor);
+		super(Opcodes.ASM4, visitor);
 		this.className = theClass;
 	}
 	

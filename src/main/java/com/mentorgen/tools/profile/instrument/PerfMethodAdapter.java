@@ -28,14 +28,13 @@ modification, are permitted provided that the following conditions are met:
  */
 package com.mentorgen.tools.profile.instrument;
 
-import org.objectweb.asm.jip.Label;
-import org.objectweb.asm.jip.MethodAdapter;
-import org.objectweb.asm.jip.MethodVisitor;
-import org.objectweb.asm.jip.Opcodes;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 import com.mentorgen.tools.profile.Controller;
 
-import static org.objectweb.asm.jip.Opcodes.INVOKESTATIC;
+import static org.objectweb.asm.Opcodes.INVOKESTATIC;
 
 /**
  * This class is responsible for instrumenting a method to 
@@ -52,7 +51,7 @@ import static org.objectweb.asm.jip.Opcodes.INVOKESTATIC;
  * @author Andrew Wilcox
  *
  */
-public class PerfMethodAdapter extends MethodAdapter {
+public class PerfMethodAdapter extends MethodVisitor {
 	private String _className, _methodName;
 	private boolean _clinit = false;
 	private boolean _init = false;
@@ -60,7 +59,7 @@ public class PerfMethodAdapter extends MethodAdapter {
 	public PerfMethodAdapter(MethodVisitor visitor, 
 			String className,
 			String methodName) { 
-		super(visitor);
+		super(Opcodes.ASM4, visitor);
 		_className = className;
 		_methodName = methodName;
 
