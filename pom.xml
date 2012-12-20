@@ -7,6 +7,13 @@
   <version>1.0.0-SNAPSHOT</version>
   <name>Java Code Profiler</name>
 
+  <repositories>
+    <repository>
+      <id>project-repo</id>
+      <url>file://${project.basedir}/repo</url>
+    </repository>
+  </repositories>
+
   <organization>
     <name>Patrick Mahoney</name>
     <url>http://polycrystal.org</url>
@@ -15,6 +22,7 @@
   <properties>
     <asmVersion>4.0</asmVersion>
     <jacksonVersion>1.9.4</jacksonVersion>
+    <yaslVersion>1.3</yaslVersion>
   </properties>
 
   <build>
@@ -168,6 +176,23 @@
       <groupId>org.codehaus.jackson</groupId>
       <artifactId>jackson-smile</artifactId>
       <version>${jacksonVersion}</version>
+    </dependency>
+
+    <!-- local dependencies (in no known maven repo) -->
+    <dependency>
+      <groupId>org.yasl</groupId>
+      <artifactId>yasl-arch</artifactId>
+      <version>${yaslVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.yasl</groupId>
+      <artifactId>yasl-components</artifactId>
+      <version>${yaslVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.yasl</groupId>
+      <artifactId>yasl-slf4j</artifactId>
+      <version>${yaslVersion}</version>
     </dependency>
 
     <dependency>
