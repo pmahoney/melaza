@@ -7,9 +7,9 @@
     <version>1.0.0-SNAPSHOT</version>
     <artifactId>melaza-parent</artifactId>
   </parent>
-  <groupId>${parent.groupId}</groupId>
+  <groupId>org.polycrystal</groupId>
   <artifactId>melaza-core</artifactId>
-  <version>${parent.version}</version>
+  <version>1.0.0-SNAPSHOT</version>
   <name>Melaza Java Code Profiler</name>
   <description>
     An instrumenting call tree analyzer forked from JIP.
@@ -47,17 +47,6 @@
         <groupId>org.apache.maven.shared</groupId>
         <artifactId>maven-filtering</artifactId>
         <version>0.9</version>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
-        <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
-          <fork>false</fork>
-          <encoding>UTF-8</encoding>
-        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
