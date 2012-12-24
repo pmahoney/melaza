@@ -138,6 +138,11 @@ public class Transformer implements ClassFileTransformer {
 		
 		b.append("\t");
 		b.append(className);
+		if (loader != null) {
+		    b.append(loader.getClass().getName());
+		} else {
+		    b.append("null");
+		}
 		b.append("\t");
 		b.append("[");
 		b.append(loader.getClass().getName());
