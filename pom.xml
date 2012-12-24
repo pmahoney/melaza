@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.polycrystal</groupId>
-  <artifactId>look-sharp</artifactId>
+  <artifactId>melaza</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <name>Java Code Profiler</name>
 
@@ -98,11 +98,11 @@
               <rules>
                 <rule>
                   <pattern>org.objectweb.asm.**</pattern>
-                  <result>org.polycrystal.looksharp.deps.asm.@1</result>
+                  <result>org.polycrystal.melaza.deps.asm.@1</result>
                 </rule>
                 <rule>
                   <pattern>org.codehaus.jackson.**</pattern>
-                  <result>org.polycrystal.looksharp.deps.jackson.@1</result>
+                  <result>org.polycrystal.melaza.deps.jackson.@1</result>
                 </rule>
               </rules>
             </configuration>
