@@ -10,53 +10,16 @@
   <groupId>org.polycrystal</groupId>
   <artifactId>melaza-core</artifactId>
   <version>1.0.0-SNAPSHOT</version>
-  <name>Melaza Java Code Profiler</name>
+  <name>Melaza Core</name>
   <description>
     An instrumenting call tree analyzer forked from JIP.
   </description>
-
-  <repositories>
-    <repository>
-      <id>project-repo</id>
-      <url>file://${project.basedir}/repo</url>
-    </repository>
-  </repositories>
-
-  <organization>
-    <name>Patrick Mahoney</name>
-    <url>http://polycrystal.org</url>
-  </organization>
-
-  <properties>
-    <asmVersion>4.0</asmVersion>
-    <jacksonVersion>1.9.4</jacksonVersion>
-    <yaslVersion>1.3</yaslVersion>
-  </properties>
-
   <build>
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-      </resource>
-      <resource>
-        <directory>${project.build.directory}/generated-resources</directory>
-      </resource>
-    </resources>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.shared</groupId>
-        <artifactId>maven-filtering</artifactId>
-        <version>0.9</version>
-      </plugin>
-      <plugin>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>2.3.1</version>
         <configuration>
           <archive>
-            <manifestEntries>
-              <!-- Main-Class>org.shiftone.jrat.cli.Cli</Main-Class -->
-              <Premain-Class>com.mentorgen.tools.profile.Main</Premain-Class>
-            </manifestEntries>
             <manifest>
               <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
               <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
@@ -69,40 +32,6 @@
             <goals>
               <goal>jar</goal>
             </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.sonatype.plugins</groupId>
-        <artifactId>jarjar-maven-plugin</artifactId>
-        <version>1.5</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>jarjar</goal>
-            </goals>
-            <configuration>
-              <includes>
-                <include>org.ow2.asm:asm</include>
-                <include>org.ow2.asm:asm-util</include>
-                <include>org.ow2.asm:asm-commons</include>
-
-                <include>org.codehaus.jackson:jackson-mapper-asl</include>
-                <include>org.codehaus.jackson:jackson-core-asl</include>
-                <include>org.codehaus.jackson:jackson-smile</include>
-              </includes>
-              <rules>
-                <rule>
-                  <pattern>org.objectweb.asm.**</pattern>
-                  <result>org.polycrystal.melaza.deps.asm.@1</result>
-                </rule>
-                <rule>
-                  <pattern>org.codehaus.jackson.**</pattern>
-                  <result>org.polycrystal.melaza.deps.jackson.@1</result>
-                </rule>
-              </rules>
-            </configuration>
           </execution>
         </executions>
       </plugin>
@@ -157,44 +86,36 @@
     <dependency>
       <groupId>org.ow2.asm</groupId>
       <artifactId>asm</artifactId>
-      <version>${asmVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.ow2.asm</groupId>
       <artifactId>asm-commons</artifactId>
-      <version>${asmVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.ow2.asm</groupId>
       <artifactId>asm-util</artifactId>
-      <version>${asmVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.codehaus.jackson</groupId>
       <artifactId>jackson-mapper-asl</artifactId>
-      <version>${jacksonVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.codehaus.jackson</groupId>
       <artifactId>jackson-smile</artifactId>
-      <version>${jacksonVersion}</version>
     </dependency>
 
     <!-- local dependencies (in no known maven repo) -->
     <dependency>
       <groupId>org.yasl</groupId>
       <artifactId>yasl-arch</artifactId>
-      <version>${yaslVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.yasl</groupId>
       <artifactId>yasl-components</artifactId>
-      <version>${yaslVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.yasl</groupId>
       <artifactId>yasl-slf4j</artifactId>
-      <version>${yaslVersion}</version>
     </dependency>
 
     <dependency>

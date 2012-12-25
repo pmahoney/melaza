@@ -1,0 +1,86 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.polycrystal</groupId>
+    <version>1.0.0-SNAPSHOT</version>
+    <artifactId>melaza-parent</artifactId>
+  </parent>
+  <groupId>org.polycrystal</groupId>
+  <artifactId>melaza-agent</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <name>Melaza Agent</name>
+  <description>
+    Java Agent for using Melaza
+  </description>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifestEntries>
+	      <Premain-Class>org.polycrystal.melaza.Agent</Premain-Class>
+	      <!--
+		  Surely there's a better way of getting ourself onto
+		  the boot class path?  This technique will break as
+		  soon as someone renames the file...
+	      -->
+	      <Boot-Class-Path>../${project.artifactId}-${project.version}.jar</Boot-Class-Path>
+            </manifestEntries>
+            <manifest>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+              <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+            </manifest>
+          </archive>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>2.0</version>
+        <configuration>
+	  <artifactSet>
+	    <includes>
+	      <include>*:*</include>
+	    </includes>
+	  </artifactSet>
+	  <relocations>
+	    <relocation>
+	      <pattern>org.objectweb.asm</pattern>
+	      <shadedPattern>org.polycrystal.melaza.deps.asm</shadedPattern>
+	    </relocation>
+	    <relocation>
+	      <pattern>org.codehaus.jackson</pattern>
+	      <shadedPattern>org.polycrystal.melaza.deps.jackson</shadedPattern>
+	    </relocation>
+	  </relocations>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencies>
+    <dependency>
+      <groupId>org.polycrystal</groupId>
+      <artifactId>melaza-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+</project>
