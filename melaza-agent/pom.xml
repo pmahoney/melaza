@@ -64,15 +64,19 @@
 	      <relocations>
 		<relocation>
 		  <pattern>org.objectweb.asm</pattern>
-		  <shadedPattern>org.polycrystal.melaza.deps.asm</shadedPattern>
+		  <shadedPattern>melaza.deps.asm</shadedPattern>
 		</relocation>
 		<relocation>
 		  <pattern>org.codehaus.jackson</pattern>
-		  <shadedPattern>org.polycrystal.melaza.deps.jackson</shadedPattern>
+		  <shadedPattern>melaza.deps.jackson</shadedPattern>
 		</relocation>
 		<relocation>
 		  <pattern>org.slf4j</pattern>
-		  <shadedPattern>org.polycrystal.melaza.deps.slf4j</shadedPattern>
+		  <shadedPattern>melaza.deps.slf4j</shadedPattern>
+		</relocation>
+		<relocation>
+		  <pattern>ch.qos.logback</pattern>
+		  <shadedPattern>melaza.deps.logback</shadedPattern>
 		</relocation>
 	      </relocations>
 	    </configuration>
@@ -86,6 +90,11 @@
       <groupId>org.polycrystal</groupId>
       <artifactId>melaza-core</artifactId>
       <version>${project.version}</version>
+    </dependency>
+    <dependency>
+    	<groupId>ch.qos.logback</groupId>
+    	<artifactId>logback-classic</artifactId>
+    	<version>1.0.9</version>
     </dependency>
   </dependencies>
 </project>
