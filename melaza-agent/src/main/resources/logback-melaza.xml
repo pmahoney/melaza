@@ -1,0 +1,15 @@
+<!--
+  Note: all class names normally found at 'ch.qos.logback' are relocated to
+  'melaza.deps.logback' within melaza-agent.
+-->
+<configuration>
+  <appender name="STDOUT" class="melaza.deps.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%r %-5level %logger{25} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <root level="debug">
+    <appender-ref ref="STDOUT" />
+  </root>
+</configuration>

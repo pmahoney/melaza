@@ -35,6 +35,8 @@ import java.security.ProtectionDomain;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.mentorgen.tools.profile.Controller;
 
@@ -48,13 +50,17 @@ import com.mentorgen.tools.profile.Controller;
  * @see java.lang.instrument.ClassFileTransformer
  */
 public class Transformer implements ClassFileTransformer {
+    
+    private static final Logger logger = LoggerFactory.getLogger(Transformer.class);
 		
 	public byte[] transform(ClassLoader loader, 
 			String className, 
 			Class<?> classBeingRedefined, 
 			ProtectionDomain protectionDomain, 
 			byte[] classfileBuffer) throws IllegalClassFormatException {
-		
+
+	    logger.debug("considering class {} from {}", className, loader);
+
 		// can't profile yourself
 		//
 		if (className.startsWith("com/mentorgen/tools/profile") ||
