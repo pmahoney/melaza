@@ -52,21 +52,21 @@ import com.mentorgen.tools.profile.Controller;
 public class Transformer implements ClassFileTransformer {
     
     private static final Logger logger = LoggerFactory.getLogger(Transformer.class);
-		
+    
 	public byte[] transform(ClassLoader loader, 
 			String className, 
 			Class<?> classBeingRedefined, 
 			ProtectionDomain protectionDomain, 
 			byte[] classfileBuffer) throws IllegalClassFormatException {
 
-	    logger.debug("considering class {} from {}", className, loader);
-
 		// can't profile yourself
 		//
 		if (className.startsWith("com/mentorgen/tools/profile") ||
 				className.startsWith("net/sourceforge/jiprof") ||
-				className.startsWith("org/polycrystal/melaza/deps")) {
-			return classfileBuffer;
+				className.startsWith("org/polycrystal/melaza") ||
+				className.startsWith("melaza/deps")) {
+		    logger.debug("skip class {} [{}] (internal)", className, loader);
+		    return null;
 		}
 		
 		// include
@@ -82,39 +82,28 @@ public class Transformer implements ClassFileTransformer {
 			}
 			
 			if (!toInclude) {
-				if (Controller._debug) {
-					debug(loader, className, false);
-				}
-				
-				return classfileBuffer;
+			    logger.debug("skip {} [{}] (not in include list)", className, loader);
+			    return null;
 			}
 		}
 		
 		if (!Controller._filter.accept(loader)){
-			
-			if (Controller._debug) {
-				debug(loader, className, false);
-			}
-			
-			return classfileBuffer;
+		    logger.debug("skip {} [{}] (not accepted by filter)", className, loader);
+			return null;
 		}
 
 		// exclude
 		//
 		for (String exclude: Controller._excludeList) {
 			if (className.startsWith(exclude)) {
-				if (Controller._debug) {
-					debug(loader, className, false);
-				}
-				return classfileBuffer;
+			    logger.debug("skip {} [{}] (matched exclude list)", className, loader);
+			    return null;
 			}
 		}
 		
 		byte[] result = classfileBuffer;
 		try {
-			if (Controller._debug) {
-				debug(loader, className, true);
-			}
+		    logger.debug("INST {} [{}]", className, loader);
 			
 			Controller._instrumentCount++;
 			
@@ -131,29 +120,5 @@ public class Transformer implements ClassFileTransformer {
 		return result;
 	}
 	
-	
-	private void debug(ClassLoader loader, String className, 
-			boolean transformed) {
-		StringBuffer b = new StringBuffer();
-		
-		if (transformed) {
-			b.append("INST");
-		} else {
-			b.append("skip");
-		}
-		
-		b.append("\t");
-		b.append(className);
-		if (loader != null) {
-		    b.append(loader.getClass().getName());
-		} else {
-		    b.append("null");
-		}
-		b.append("\t");
-		b.append("[");
-		b.append(loader.getClass().getName());
-		b.append("]");
-		System.out.println(b.toString());
-	}
 }
 
