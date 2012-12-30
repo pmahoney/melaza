@@ -36,6 +36,7 @@
 
   <modules>
     <module>melaza-agent</module>
+    <module>melaza-console</module>
     <module>melaza-core</module>
   </modules>
 
