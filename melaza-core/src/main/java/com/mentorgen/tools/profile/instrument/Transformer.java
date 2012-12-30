@@ -47,11 +47,28 @@ import com.mentorgen.tools.profile.Controller;
  * and what ones are not.
  * 
  * @author Andrew Wilcox
+ * @author Patrick Mahoney
  * @see java.lang.instrument.ClassFileTransformer
  */
 public class Transformer implements ClassFileTransformer {
     
     private static final Logger logger = LoggerFactory.getLogger(Transformer.class);
+    
+    private final String[] internalPackages = new String[] {
+        "com/mentorgen/tools/profile",
+        "net/sourceforge/jiprof",
+        "org/polycrystal/melaza",
+        "melaza/deps"
+    };
+    
+    private boolean isInternalClass(String className) {
+        for (String prefix : internalPackages) {
+            if (className.startsWith(prefix)) {
+                return true;
+            }
+        }
+        return false;
+    }
     
 	public byte[] transform(ClassLoader loader, 
 			String className, 
@@ -61,13 +78,10 @@ public class Transformer implements ClassFileTransformer {
 
 		// can't profile yourself
 		//
-		if (className.startsWith("com/mentorgen/tools/profile") ||
-				className.startsWith("net/sourceforge/jiprof") ||
-				className.startsWith("org/polycrystal/melaza") ||
-				className.startsWith("melaza/deps")) {
-		    logger.debug("skip class {} [{}] (internal)", className, loader);
-		    return null;
-		}
+	    if (isInternalClass(className)) {
+	        logger.debug("skip class {} [{}] (internal)", className, loader);
+	        return null;
+	    }
 		
 		// include
 		//
