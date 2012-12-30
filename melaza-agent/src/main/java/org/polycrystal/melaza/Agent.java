@@ -64,8 +64,9 @@ public class Agent {
         try {
             final JoranConfigurator configurator = new JoranConfigurator();
             configurator.setContext(context);
-            context.reset(); 
-            // TODO: make this configurable
+            context.reset();
+            // TODO: make these properties configurable as well as logback config itself
+            context.putProperty("level", "debug");
             final URL url = Agent.class.getClassLoader().getResource("logback-melaza.xml");
             configurator.doConfigure(url);
         } catch (JoranException je) {
