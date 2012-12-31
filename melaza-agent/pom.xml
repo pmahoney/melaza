@@ -27,7 +27,7 @@
 		  the boot class path?  This technique will break as
 		  soon as someone renames the file...
 	      -->
-	      <Boot-Class-Path>../${project.artifactId}-${project.version}.jar</Boot-Class-Path>
+	      <Boot-Class-Path>${project.artifactId}-${project.version}.jar</Boot-Class-Path>
             </manifestEntries>
             <manifest>
               <addDefaultImplementationEntries>true</addDefaultImplementationEntries>

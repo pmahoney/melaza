@@ -67,7 +67,9 @@ public class Agent {
             context.reset();
             // TODO: make these properties configurable as well as logback config itself
             context.putProperty("level", "debug");
-            final URL url = Agent.class.getClassLoader().getResource("logback-melaza.xml");
+            // We're on the boot classpath, so our resources are found in the system
+            // class loader
+            final URL url = ClassLoader.getSystemResource("logback-melaza.xml");
             configurator.doConfigure(url);
         } catch (JoranException je) {
             // StatusPrinter will handle this
