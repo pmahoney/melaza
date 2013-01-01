@@ -60,14 +60,27 @@ public class Transformer implements ClassFileTransformer {
         "org/polycrystal/melaza",
         "melaza/deps"
     };
+
+    private final String[] javaPackages = new String[] {
+        "java/",
+        "sun/"
+    };
     
-    private boolean isInternalClass(String className) {
-        for (String prefix : internalPackages) {
-            if (className.startsWith(prefix)) {
+    private boolean matchesPrefix(String str, String[] prefixes) {
+        for (String prefix : prefixes) {
+            if (str.startsWith(prefix)) {
                 return true;
             }
         }
         return false;
+    }
+
+    private boolean isInternalClass(String className) {
+        return matchesPrefix(className, internalPackages);
+    }
+    
+    private boolean isJavaClass(String className) {
+        return matchesPrefix(className, javaPackages);
     }
     
 	public byte[] transform(ClassLoader loader, 
@@ -79,7 +92,14 @@ public class Transformer implements ClassFileTransformer {
 		// can't profile yourself
 		//
 	    if (isInternalClass(className)) {
-	        logger.debug("skip class {} [{}] (internal)", className, loader);
+	        logger.debug("skip {} [{}] (internal)", className, loader);
+	        return null;
+	    }
+	    
+	    if (isJavaClass(className)) {
+	        // FIXME: make some sort of canned exclude lists that might
+	        // be opted out of
+	        logger.debug("skip {} [{}] (java)", className, loader);
 	        return null;
 	    }
 		
@@ -96,13 +116,13 @@ public class Transformer implements ClassFileTransformer {
 			}
 			
 			if (!toInclude) {
-			    logger.debug("skip {} [{}] (not in include list)", className, loader);
+			    logger.debug("skip {} [{}] (class not in include list)", className, loader);
 			    return null;
 			}
 		}
 		
 		if (!Controller._filter.accept(loader)){
-		    logger.debug("skip {} [{}] (not accepted by filter)", className, loader);
+		    logger.debug("skip {} [{}] (loader not accepted by filter)", className, loader);
 			return null;
 		}
 
@@ -110,7 +130,7 @@ public class Transformer implements ClassFileTransformer {
 		//
 		for (String exclude: Controller._excludeList) {
 			if (className.startsWith(exclude)) {
-			    logger.debug("skip {} [{}] (matched exclude list)", className, loader);
+			    logger.debug("skip {} [{}] (class in exclude list)", className, loader);
 			    return null;
 			}
 		}

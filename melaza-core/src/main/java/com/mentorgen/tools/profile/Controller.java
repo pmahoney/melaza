@@ -40,6 +40,8 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
+import org.polycrystal.melaza.instrument.clfilter.PassThroughClassLoaderFilter;
+
 import net.sourceforge.jiprof.instrument.clfilter.GenericClassLoaderFilter;
 
 import com.mentorgen.tools.profile.instrument.clfilter.ClassLoaderFilter;
@@ -117,7 +119,7 @@ import com.mentorgen.tools.profile.runtime.Profile;
 			<b>Values</b>: any valid implemtation of 
 			<code>com.mentorgen.tools.profile.ClassLoaderFilter</code><br/>
 			<b>Default</b>: If no class loader filters a specificed then
-		<code>net.sourceforge.jiprof.instrument.clfilter.GenericClassLoaderFilter</code>
+		<code>org.polycrystal.melaza.instrument.clfilter.PassThroughClassLoaderFilter</code>
 			is used (see also: <a href="#accept-class-loaders">accept-class-loaders</a>).<br/>
 			<b>Description</b>: JIP has to know which classloader will be 
 			loading the classes to be profiled. With command-line
@@ -559,8 +561,8 @@ public class Controller implements Runnable {
 		}
 		
 		if (_filter == null) {
-			System.err.println("Using the generic class loader filter.");
-			_filter = new GenericClassLoaderFilter();
+			System.err.println("Not filtering by ClassLoader.");
+			_filter = new PassThroughClassLoaderFilter();
 		}
 		
 		Controller._profiler = profiler.replace('.', '/');
