@@ -25,15 +25,20 @@ public class Agent {
     /**
      * Usage:
      * 
-     * <p>{@code java -javaagent:melaza-agent.jar -Dprofile.properties=file}
+     * <p>{@code java -javaagent:melaza-agent.jar=properties:file -Dmelaza.properties=file}
+     * 
+     * <p>Configuration values can be set as agent args (by appending {@code =args} to
+     * the javaagent line), by system properties prefixed with {@code melaza.}, or
+     * through a properties file specified by one of the above methods.
      * 
      * @param args
      * @param inst
      */
     public static void premain(String args, Instrumentation inst) {
+        final Config config = new Config(args);
+        configureLogger(config);
+
         Properties props = null;
-        
-        configureLogger();
         
         if (args == null || args.length() == 0 || args.equals("null")) {
             props = new Properties();
@@ -58,15 +63,14 @@ public class Agent {
         inst.addTransformer(new Transformer());
     }
     
-    private static void configureLogger() {
+    private static void configureLogger(Config config) {
         final LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
         
         try {
             final JoranConfigurator configurator = new JoranConfigurator();
             configurator.setContext(context);
             context.reset();
-            // TODO: make these properties configurable as well as logback config itself
-            context.putProperty("level", "debug");
+            context.putProperty("level", config.getLoggerLevel());
             // We're on the boot classpath, so our resources are found in the system
             // class loader
             final URL url = ClassLoader.getSystemResource("logback-melaza.xml");
