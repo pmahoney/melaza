@@ -53,7 +53,7 @@ import com.mentorgen.tools.profile.Controller;
 public class Transformer implements ClassFileTransformer {
     
     private static final Logger logger = LoggerFactory.getLogger(Transformer.class);
-    
+
     private final String[] internalPackages = new String[] {
         "com/mentorgen/tools/profile",
         "net/sourceforge/jiprof",
@@ -135,7 +135,6 @@ public class Transformer implements ClassFileTransformer {
 			}
 		}
 		
-		byte[] result = classfileBuffer;
 		try {
 		    logger.debug("INST {} [{}]", className, loader);
 			
@@ -145,13 +144,11 @@ public class Transformer implements ClassFileTransformer {
 			ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 			ClassVisitor adapter = new PerfClassAdapter(writer, className);
 			reader.accept(adapter, ClassReader.SKIP_DEBUG);
-			result = writer.toByteArray();
+			return writer.toByteArray();
 		} catch (Throwable t) {
 			t.printStackTrace();
 			throw new RuntimeException(t);
 		}
-		
-		return result;
 	}
 	
 }
