@@ -31,6 +31,8 @@ package com.mentorgen.tools.profile.instrument;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.polycrystal.melaza.instrument.JRubyMethodTranslator;
+import org.polycrystal.melaza.instrument.JRubyMethodTranslator.MethodDescriptor;
 
 import com.mentorgen.tools.profile.Controller;
 
@@ -58,10 +60,14 @@ public class PerfClassAdapter extends ClassVisitor {
                                              descriptor, 
                                              signature, 
                                              exceptions);
+        // TODO: make these translators configurable
+        final JRubyMethodTranslator t = new JRubyMethodTranslator(); 
+        final MethodDescriptor desc = t.translate(className, name);
+        
         if (Controller._outputMethodSignatures && descriptor != null) {
-            return new PerfMethodAdapter(mv, className, name + descriptor);
+            return new PerfMethodAdapter(mv, desc.className, desc.methodName + descriptor);
         } else {
-            return new PerfMethodAdapter(mv, className, name);
+            return new PerfMethodAdapter(mv, desc.className, desc.methodName);
         }
     }
     
