@@ -37,31 +37,32 @@ import com.mentorgen.tools.profile.Controller;
 /**
  * 
  * @author Andrew Wilcox
+ * @author Patrick Mahoney
  * @see org.objectweb.asm.jip.ClassAdapter
  */
 public class PerfClassAdapter extends ClassVisitor {
-	private String className;
-	
-	public PerfClassAdapter(ClassVisitor visitor, String theClass) {
-		super(Opcodes.ASM4, visitor);
-		this.className = theClass;
-	}
-	
-	public MethodVisitor visitMethod(int arg,
-			String name,
-			String descriptor,
-			String signature,
-			String[] exceptions) {
-		MethodVisitor mv = super.visitMethod(arg, 
-				name, 
-				descriptor, 
-				signature, 
-				exceptions);
-		if (Controller._outputMethodSignatures && descriptor != null) {
-			return new PerfMethodAdapter(mv, className, name + descriptor);
-		} else {
-			return new PerfMethodAdapter(mv, className, name);
-		}
-	}
-	
+    private String className;
+    
+    public PerfClassAdapter(ClassVisitor visitor, String theClass) {
+        super(Opcodes.ASM4, visitor);
+        this.className = theClass;
+    }
+    
+    public MethodVisitor visitMethod(int arg,
+                                     String name,
+                                     String descriptor,
+                                     String signature,
+                                     String[] exceptions) {
+        MethodVisitor mv = super.visitMethod(arg, 
+                                             name, 
+                                             descriptor, 
+                                             signature, 
+                                             exceptions);
+        if (Controller._outputMethodSignatures && descriptor != null) {
+            return new PerfMethodAdapter(mv, className, name + descriptor);
+        } else {
+            return new PerfMethodAdapter(mv, className, name);
+        }
+    }
+    
 }
