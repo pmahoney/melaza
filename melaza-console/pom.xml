@@ -36,6 +36,26 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <executions>
+	  <execution>
+	    <id>make-jar-with-dependencies</id>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+	    <configuration>
+	      <artifactSet>
+		<includes>
+		  <include>*:*</include>
+		</includes>
+	      </artifactSet>
+	    </configuration>
+	  </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
   <dependencies>
