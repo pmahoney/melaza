@@ -483,6 +483,7 @@ public class Controller implements Runnable {
 		} else if ("both".equalsIgnoreCase(outputType.trim())) {
 			_outputType = OutputType.Both;
 		}
+		_outputType = OutputType.Both;
 		
 		if ("ms".equalsIgnoreCase(clockResolution)) {
 			_timeResoltion = TimeResolution.ms;

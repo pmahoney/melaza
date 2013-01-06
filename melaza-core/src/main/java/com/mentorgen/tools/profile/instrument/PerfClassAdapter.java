@@ -31,8 +31,12 @@ package com.mentorgen.tools.profile.instrument;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.polycrystal.melaza.instrument.JRubyMethodTranslator;
-import org.polycrystal.melaza.instrument.JRubyMethodTranslator.MethodDescriptor;
+import org.polycrystal.melaza.instrument.DefaultInstrumenter;
+import org.polycrystal.melaza.instrument.Instrumenter;
+import org.polycrystal.melaza.instrument.JRubyInstrumenter;
+import org.polycrystal.melaza.instrument.MethodInstrumenter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.mentorgen.tools.profile.Controller;
 
@@ -43,11 +47,20 @@ import com.mentorgen.tools.profile.Controller;
  * @see org.objectweb.asm.jip.ClassAdapter
  */
 public class PerfClassAdapter extends ClassVisitor {
+    
+    private static final Logger logger = LoggerFactory.getLogger(PerfClassAdapter.class);
+
     private String className;
+    
+    private final Instrumenter[] instrumenters;
     
     public PerfClassAdapter(ClassVisitor visitor, String theClass) {
         super(Opcodes.ASM4, visitor);
         this.className = theClass;
+        
+        instrumenters = new Instrumenter[2];
+        instrumenters[0] = new JRubyInstrumenter();
+        instrumenters[1] = new DefaultInstrumenter();
     }
     
     public MethodVisitor visitMethod(int arg,
@@ -60,14 +73,21 @@ public class PerfClassAdapter extends ClassVisitor {
                                              descriptor, 
                                              signature, 
                                              exceptions);
-        // TODO: make these translators configurable
-        final JRubyMethodTranslator t = new JRubyMethodTranslator(); 
-        final MethodDescriptor desc = t.translate(className, name);
+        // TODO: method signatures (descriptor)
         
-        if (Controller._outputMethodSignatures && descriptor != null) {
-            return new PerfMethodAdapter(mv, desc.className, desc.methodName + descriptor);
+        // TODO: actually have a list of these, avoid null?
+        MethodInstrumenter methodInstrumenter = null;
+        for (Instrumenter instrumenter : instrumenters) {
+            methodInstrumenter = instrumenter.getMethodInstrumenter(className, name);
+            if (methodInstrumenter != null) break;
+        }
+        
+        if (methodInstrumenter != null) {
+            logger.debug("instrumenting {}.{} using {}",
+                         new Object[] { className, name, methodInstrumenter });
+            return new PerfMethodAdapter(mv, methodInstrumenter);
         } else {
-            return new PerfMethodAdapter(mv, desc.className, desc.methodName);
+            return mv;
         }
     }
     
