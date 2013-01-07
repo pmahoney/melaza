@@ -250,6 +250,7 @@ public class JipViewer extends JFrame
                             toMsec(mFrame.getTotalTime()) + " " +
                             toMsec(mFrame.getNetTime()) + " " +
                             mFrame.getCount() + ") " +
+                            mFrame.getMethod().getClassName() + "#" +
                             mFrame.getMethod().getMethodName());
             return label;
         }
