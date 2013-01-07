@@ -143,7 +143,7 @@ public class Transformer implements ClassFileTransformer {
 			ClassReader reader = new ClassReader(classfileBuffer);
 			ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 			ClassVisitor adapter = new PerfClassAdapter(writer, className);
-			reader.accept(adapter, ClassReader.SKIP_DEBUG);
+			reader.accept(adapter, 0);
 			return writer.toByteArray();
 		} catch (Throwable t) {
 			t.printStackTrace();
