@@ -59,11 +59,13 @@ public class PerfMethodAdapter extends MethodVisitor {
         this.methodInstrumenter = methodInstrumenter;
     }
     
+    @Override
     public void visitCode() {
         methodInstrumenter.profilerStart(this);
         super.visitCode();
     }
 
+    @Override
     public void visitInsn(int inst) {
         switch (inst) {
         case Opcodes.ARETURN:
