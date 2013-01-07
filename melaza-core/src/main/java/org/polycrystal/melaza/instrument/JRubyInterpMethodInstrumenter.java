@@ -44,21 +44,19 @@ public class JRubyInterpMethodInstrumenter implements MethodInstrumenter {
     private static final Logger logger = LoggerFactory.getLogger(JRubyInterpMethodInstrumenter.class);
     
     public static String getClassName(IRubyObject target) {
+        final String className;
         if (target.isModule()) {
-            return target.toString();
+            className = target.toString();
         } else if (target.isClass()) {
-            return target.toString();
+            className = target.toString();
         } else {
-            return target.getType().toString();
+            className = target.getType().toString();
         }
+        return "rubyinterp/" + className;
     }
     
     public static void profileStart(IRubyObject target, FCallNode node) {
-        final String methodName = node.getName();
-        logger.debug("singleton? {}", target.getType().isSingleton());
-        final String className = getClassName(target);
-        logger.debug("calling {}#{}", className, methodName);
-        Profile.start("rubyinterp/" + className, methodName);
+        Profile.start(getClassName(target), node.getName());
     }
     
     public static void profileEnd(IRubyObject target, FCallNode node) {
