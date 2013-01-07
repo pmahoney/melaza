@@ -217,6 +217,9 @@ public class JipViewer extends JFrame
     }
 
     static class TreeNode extends DefaultMutableTreeNode {
+        
+        private static final double NANOS_PER_MILLI = 1000 * 1000;
+
         // we either represent a frame or a random node.
         // if we represent a frame, mFrame is set.
         // otherwise, mLabel is set.
@@ -245,14 +248,14 @@ public class JipViewer extends JFrame
             if (mFrame == null) {
                 return mLabel;
             }
-
-            String label = ("(" +
-                            toMsec(mFrame.getTotalTime()) + " " +
-                            toMsec(mFrame.getNetTime()) + " " +
-                            mFrame.getCount() + ") " +
-                            mFrame.getMethod().getClassName() + "#" +
-                            mFrame.getMethod().getMethodName());
-            return label;
+            
+            return String.format("(%.1f  %.2f  %dx %.2fper) %s#%s",
+                                 mFrame.getTotalTime() / NANOS_PER_MILLI,
+                                 mFrame.getNetTime() / NANOS_PER_MILLI,
+                                 mFrame.getCount(),
+                                 mFrame.getNetTime() / NANOS_PER_MILLI / mFrame.getCount(),
+                                 mFrame.getMethod().getClassName(),
+                                 mFrame.getMethod().getMethodName());
         }
 
         // returns the first node that has the given method (or null if none)
@@ -315,7 +318,7 @@ public class JipViewer extends JFrame
         final double timeToMsec = 1000.0 * 1000.0;
         return Math.floor((time / timeToMsec) * 10) / 10.0;
     }
-
+    
     private void buildFrameTree(TreeNode parent, JipFrame frame) {
         // compare for reverse total time.
         Comparator cmp = new Comparator<JipFrame>() {
