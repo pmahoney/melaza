@@ -58,9 +58,10 @@ public class PerfClassAdapter extends ClassVisitor {
         super(Opcodes.ASM4, visitor);
         this.className = theClass;
         
-        instrumenters = new Instrumenter[2];
-        instrumenters[0] = new JRubyInstrumenter();
-        instrumenters[1] = new DefaultInstrumenter();
+        instrumenters = new Instrumenter[] {
+            new JRubyInstrumenter(),
+            new DefaultInstrumenter()
+        };
     }
     
     public MethodVisitor visitMethod(int arg,
