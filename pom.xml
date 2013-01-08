@@ -18,7 +18,7 @@
     -->
     <repository>
       <id>project-repo</id>
-      <url>file://${project.basedir}/repo</url>
+      <url>file://${parent.basedir}/repo</url>
     </repository>
   </repositories>
 
