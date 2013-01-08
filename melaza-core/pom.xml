@@ -7,9 +7,7 @@
     <version>1.0.0-SNAPSHOT</version>
     <artifactId>melaza-parent</artifactId>
   </parent>
-  <groupId>org.polycrystal</groupId>
   <artifactId>melaza-core</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
   <name>Melaza Core</name>
   <description>
     An instrumenting call tree analyzer forked from JIP.
@@ -107,7 +105,6 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.10</version>
       <scope>test</scope>
     </dependency>
     <dependency>

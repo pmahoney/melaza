@@ -7,9 +7,7 @@
     <version>1.0.0-SNAPSHOT</version>
     <artifactId>melaza-parent</artifactId>
   </parent>
-  <groupId>org.polycrystal</groupId>
   <artifactId>melaza-console</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
   <name>Melaza Console</name>
   <description>
     GUI console for viewing data from Melaza Profiler.
@@ -62,8 +60,7 @@
     <dependency>
       <groupId>edu.stanford.ejalbert</groupId>
       <artifactId>BrowserLauncher2</artifactId>
-      <version>1.3</version>
-    </dependency>
+      </dependency>
     <dependency>
       <groupId>org.polycrystal</groupId>
       <artifactId>melaza-core</artifactId>
