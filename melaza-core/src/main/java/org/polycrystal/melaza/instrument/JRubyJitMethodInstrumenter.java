@@ -23,6 +23,8 @@
  */
 package org.polycrystal.melaza.instrument;
 
+import static java.util.regex.Pattern.quote;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -47,50 +49,83 @@ public class JRubyJitMethodInstrumenter extends DefaultMethodInstrumenter {
     
     private static final Logger logger = LoggerFactory.getLogger(JRubyJitMethodInstrumenter.class);
 
+    // See JRubyJitMethodInstrumenterTest for example class names.
     private static final Pattern RUBYJIT_PATTERN =
-            Pattern.compile("^(rubyjit/[\\w:]+)\\$\\$(\\w+)_\\p{XDigit}+$");
+            Pattern.compile("^(rubyjit/[\\w:]+)\\$\\$([\\w=\\?\\^\\\\{}]+)_\\p{XDigit}+$");
+
+    /** prefix given to special case ops such as <=>, [], []=, etc. */
+    private static final String OP_PREFIX = "\\=";
+    
+    /**
+     * Simple representation of a class and method name.
+     * 
+     * @since Jan 8, 2013
+     * @author Patrick Mahoney <pat@polycrystal.org>
+     *
+     */
+    public static final class MethodDescriptor {
+
+        public final String className;
+        
+        public final String methodName;
+        
+        public MethodDescriptor(String className, String methodName) {
+            this.className = className;
+            this.methodName = methodName;
+        }
+        
+        public static String translateOp(String op) {
+            return op.substring(OP_PREFIX.length())
+                    .replaceAll(quote("{"), "[")
+                    .replaceAll(quote("}"), "]")
+                    .replaceAll(quote("^"), "<")
+                    .replaceAll(quote("_"), ">")
+                    .replaceAll(quote("\\"), "");
+        }
+
+        /**
+         * Translate a class and method name in the rubyjit package into the (rough)
+         * equivalent names that would be seen within Ruby.
+         * 
+         * @param rubyjitClass
+         * @param rubyjitMethod
+         * @return
+         */
+        public static MethodDescriptor translate(String rubyjitClass, String rubyjitMethod) {
+            final Matcher m = RUBYJIT_PATTERN.matcher(rubyjitClass);
+            if (m.matches()) {
+                final String className = m.group(1);
+                final String methodName;
+                
+                if ("<init>".equals(rubyjitMethod)) {
+                    // leave <init> because that's how we detect that we're in a constructor
+                    methodName = rubyjitMethod;
+                } else if (m.group(2).startsWith(OP_PREFIX)) {
+                    methodName = translateOp(m.group(2));
+                } else {
+                    methodName = m.group(2);
+                }
+                return new MethodDescriptor(className, methodName);
+            } else {
+                logger.warn("no rubyjit match on {} {}", rubyjitClass, rubyjitMethod);
+                return new MethodDescriptor(rubyjitClass, rubyjitMethod);
+            }
+            
+        }
+
+    }
 
     /**
-     * Note: due to the constraints of constructors and the need for both
-     * className and methodName to translate a method name, the regex
-     * ends up being matched twice.
      * 
-     * @param className
-     * @param methodName
+     * @param rubyjitClass A java class in the rubyjit package
+     * @param rubyjitMethod
      */
-    public JRubyJitMethodInstrumenter(String className, String methodName) {
-        super(translateClassName(className),
-              translateMethodName(className, methodName));
-        logger.debug("mapping {}#{} to {}#{}",
-                     new Object[] { className, methodName,
-                                    getClassName(), getMethodName() });
+    public JRubyJitMethodInstrumenter(String rubyjitClass, String rubyjitMethod) {
+        this(MethodDescriptor.translate(rubyjitClass, rubyjitMethod));
     }
     
-    public static String translateClassName(String className) {
-        final Matcher m = RUBYJIT_PATTERN.matcher(className);
-        if (m.matches()) {
-            return m.group(1);
-        } else {
-            if (className.startsWith("rubyjit/")) {
-                logger.debug("no class name match on {}", className);
-            }
-            return className;
-        }
-    }
-    
-    public static String translateMethodName(String className, String methodName) {
-        if ("<init>".equals(methodName)) {
-            // leave <init> because that's how we detect that we're in a constructor
-            return methodName;
-        } else {
-            final Matcher m = RUBYJIT_PATTERN.matcher(className);
-            if (m.matches()) {
-                return m.group(2);
-            } else {
-                logger.debug("no method name match on {}", className);
-                return methodName;
-            }
-        }
+    public JRubyJitMethodInstrumenter(MethodDescriptor desc) {
+        super(desc.className, desc.methodName);
     }
 
 }
